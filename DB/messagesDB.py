@@ -5,7 +5,7 @@ class Message:
 
 
     def __init__(self):
-        self.db =  self.db = sqlite3.connect('admin.db')
+        self.db =  self.db = sqlite3.connect('../tg_bot/dmin.db')
         self.cur = self.db.cursor()
         self.cur.execute("""CREATE TABLE IF NOT EXISTS messages(
                             id INTEGER PRIMARY KEY AUTOINCREMENT,

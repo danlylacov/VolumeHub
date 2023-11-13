@@ -1,12 +1,16 @@
 from flask import Flask, render_template, request
 import asyncio
-from bot import send_message_to_user, send_message_to_all, run_bot
+from bot import send_message_to_user
+from tg_bot.usersDB import UsersDataBase
 
 
 # Инициализация Flask приложения
 app = Flask(__name__)
 
-@app.route('/admin')
+
+
+
+@app.route('/')
 def admin():
     return render_template('admin.html')
 
@@ -20,15 +24,23 @@ def send_mes():
         chat_id = request.form.get('chat_id')
         message = request.form.get('message')
         send_to_all = request.form.get('send_to_all')
-        photo = request.files.get('photo')  # Получаем загруженное фото
+        photo = request.files.get('photo')
         if photo:
-            photo.save('uploaded_photo.jpg')  # Сохраняем загруженное фото в файл
+            photo.save('uploaded_photo.jpg')
+            photo_path = 'uploaded_photo.jpg'
+        else:
+            photo_path = None
 
         if send_to_all == '1':
-            asyncio.run(send_message_to_all(message))
+            db = UsersDataBase()
+            ids = db.get_userids()
+            print(ids)
+            for chat_id in ids:
+                asyncio.run(send_message_to_user(int(chat_id), message, photo_path=photo_path))
+
             return "Сообщение отправлено всем пользователям!"
         else:
-            asyncio.run(send_message_to_user(chat_id, message, photo_path='uploaded_photo.jpg'))
+            asyncio.run(send_message_to_user(chat_id, message, photo_path=photo_path))
             return f"Сообщение отправлено пользователю с id: {chat_id}!"
     return render_template('sendMes.html')
 
