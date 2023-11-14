@@ -5,7 +5,8 @@ from dotenv.main import load_dotenv
 from tg_bot.apsched import send_message_interval
 from volume_analyze.Standard_deviation_and_Z_score.stream_analize import StandartDeviationAnalize
 from aiogram.types import ParseMode
-from usersDB import UsersDataBase
+from adminDB import UsersDataBase
+from keyboards import start_keyboard, payment_keyboard
 
 
 
@@ -17,11 +18,23 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
 
+
+
 @dp.message_handler(commands=['start'])
-async def echo(message: types.Message):
+async def start(message: types.Message):
     db = UsersDataBase()
     db.add_user(userid=message.from_user.id, username=message.from_user.username)
-    await bot.send_message(message.chat.id, str(message.chat.id))
+    await bot.send_message(message.chat.id, "Привет! Это бот VolumeHub", reply_markup=start_keyboard)
+
+@dp.message_handler(content_types=['text'])
+async def menu(message: types.Message):
+    if message.text == 'ℹО ботеℹ':
+        db = UsersDataBase()
+        await bot.send_message(message.chat.id, str(db.get_about_bot_text()))
+
+    if message.text == '📌Подписка📌':
+        db = UsersDataBase()
+        await bot.send_message(message.chat.id, str(db.get_subscription_text()), reply_markup=payment_keyboard)
 
 
 

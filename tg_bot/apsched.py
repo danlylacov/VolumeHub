@@ -2,6 +2,7 @@ from aiogram import Bot
 from volume_analyze.Standard_deviation_and_Z_score.stream_analize import StandartDeviationAnalize
 from DB.db import DataBase
 
+
 db = DataBase()
 
 async def send_message_interval(bot: Bot):

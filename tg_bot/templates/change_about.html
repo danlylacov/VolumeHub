@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change_about</title>
+</head>
+<body>
+
+  <h1>Изменить "O боте"</h1>
+<form action="/change_texts/change_about" method="post" enctype="multipart/form-data">
+  <p>Сейчас "О боте" = {{about}}</p><br>
+    <label for="input_about">Введите новое значение "О боте": </label>
+    <input type="text" name="input_about" id="input_about"><br>
+    <input type="submit" value="Изменить"><br>
+    <a href="/change_texts">Назад</a>
+
+</form>
+
+</body>
+</html>
