@@ -12,4 +12,9 @@ async def send_message_interval(bot: Bot):
     for i in range(len(result)):
         if result[i][1][0] == True:
 
-            await bot.send_message(691902762, str(db.get_action_name_by_figi(result[i][0])))
+            await bot.send_message(691902762,
+                                   str(db.get_action_name_by_figi(result[i][0])) +
+                                   "\n\n"+str(db.get_price_change(result[i][0])) + " - изменение цены\n" +
+                                   str(db.get_day_change(result[i][0])) + " - изменение за день\n" +
+                                    str(db.get_last_price(result[i][0])) + " - текущая цена\n"+
+                                   str(db.get_last_volume(result[i][0])) + " кол-во лот - объём\n")

@@ -37,6 +37,17 @@ async def menu(message: types.Message):
         await bot.send_message(message.chat.id, str(db.get_subscription_text()), reply_markup=payment_keyboard)
 
 
+@dp.message_handler(lambda c: c.data)
+def get_payment_link(callback_query: types.CallbackQuery):
+    if callback_query.data == '30':
+        bot.send_message(callback_query.from_user.id, 'Ссылка на оплату 30 дней')
+    if callback_query.data == '90':
+        bot.send_message(callback_query.from_user.id, 'Ссылка на оплату 30 дней')
+    if callback_query.data == '90':
+        bot.send_message(callback_query.from_user.id, 'Ссылка на оплату 30 дней')
+
+
+
 
 @dp.message_handler(commands=['help'])
 async def help(message: types.Message):

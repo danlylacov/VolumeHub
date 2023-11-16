@@ -1,6 +1,7 @@
 import sqlite3
 from dotenv.main import load_dotenv
 import os
+from datetime import datetime
 
 
 class DataBase(object):
@@ -85,6 +86,36 @@ class DataBase(object):
 
     def test(self):
         return self.cur.execute('SELECT min(id) FROM BBG000BX7DH0').fetchone()
+
+    def get_price_change(self, figi: str):
+        request = self.cur.execute(f'SELECT open, close FROM {figi} WHERE id = (SELECT max(id) FROM {figi});').fetchone()
+        open, close = request[0], request[1]
+        return round((float(close)/float(open)) * 100 - 100, 3)
+
+    def get_last_price(self, figi: str):
+        request = self.cur.execute(f'SELECT close FROM {figi} WHERE id = (SELECT max(id) FROM {figi});').fetchone()[0]
+        return request
+
+    def get_last_volume(self, figi: str):
+        request = self.cur.execute(f'SELECT volume FROM {figi} WHERE id = (SELECT max(id) FROM {figi});').fetchone()[0]
+        return request
+
+
+    def get_day_change(self, figi: str):
+        year = datetime.utcnow().year
+        month = datetime.utcnow().month
+        day = datetime.utcnow().day
+        print(year, month, day)
+        open_day_price = int(self.cur.execute(f"""SELECT open FROM {figi} WHERE time LIKE '{year}-{month}-{day}%' """).fetchone()[0])
+        last_price = int(self.cur.execute(f"""SELECT close FROM {figi} WHERE id = (SELECT max(id) FROM {figi})""").fetchone()[0])
+        return round((last_price / open_day_price) * 100 - 100, 3)
+
+
+
+db = DataBase()
+print(db.get_day_change('BBG00VPKLPX4'))
+
+
 
 
 
