@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup, LabeledPrice
 from adminDB import UsersDataBase
 
 start_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
@@ -19,4 +19,11 @@ payment_buttons = [
     InlineKeyboardButton(text=f"365 дней | {prices[2]} рублей", callback_data="365"),
 ]
 payment_keyboard.add(*payment_buttons)
+
+
+PRICES_FOR_PAYMENT = [
+    LabeledPrice(label="Подписка на бота", amount=int(prices[0])*100),
+    LabeledPrice(label="Подписка на бота", amount=int(prices[1])*100),
+    LabeledPrice(label="Подписка на бота", amount=int(prices[2])*100),
+]
 

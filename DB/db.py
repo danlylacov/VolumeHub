@@ -112,8 +112,7 @@ class DataBase(object):
 
 
 
-db = DataBase()
-print(db.get_day_change('BBG00VPKLPX4'))
+
 
 
 

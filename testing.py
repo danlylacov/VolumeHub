@@ -1,8 +1,12 @@
 from datetime import datetime
 
-now = datetime.utcnow()
+# Пример строки с датой и временем
+date_string = '2024-02-20 00:43:09.772115'
 
-# Форматируем дату и время в требуемом формате
-formatted_date = now.strftime('%Y-%m-%d %H:%M:%S%z+00:00')
+# Задайте формат строки (с миллисекундами)
+date_format = '%Y-%m-%d %H:%M:%S.%f'
 
-print(formatted_date)
+# Преобразуйте строку в объект datetime
+date_object = datetime.strptime(date_string, date_format)
+
+print(date_object)

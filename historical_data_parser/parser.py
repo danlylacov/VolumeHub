@@ -68,7 +68,7 @@ class HistoricalDataParser(object):
 
 
 if __name__ == '__main__':
-    parse = HistoricalDataParser('figi.txt', 'stocks18_09.db')
+    parse = HistoricalDataParser('figi.txt', 'stocks1.db')
     parse.run()
 
 

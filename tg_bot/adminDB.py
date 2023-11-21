@@ -1,4 +1,6 @@
 import sqlite3
+from datetime import datetime, timedelta
+
 from dotenv.main import load_dotenv
 import os
 
@@ -26,12 +28,35 @@ class UsersDataBase:
         result = []
         userids = self.cur.execute('SELECT userid FROM users')
         for el in userids:
-            result.append(el[0])
+            try:
+                result.append(int(el[0]))
+            except:
+                pass
         return result
 
+    def get_subscriptors_ids(self):
+        result = []
+        users = self.cur.execute('SELECT userid, subscription FROM users').fetchall()
+        for request in users:
+            try:
+                date_string = str(request[1])
+                date_format = '%Y-%m-%d %H:%M:%S.%f'
+                subscription_date = datetime.strptime(date_string, date_format)
 
-    def give_subscription_to_user(self, interval):
-        self.cur.execute()
+                if datetime.now() < subscription_date:
+                    result.append(int(request[0]))
+            except:
+                pass
+        return list(set(result))
+
+
+
+    def give_subscription_to_user(self, interval_in_days: int, user_id: int):
+        # ИСПРАВИТЬ: СЕЙЧАС ПОДПИСКА ПРИБАВЛЯЕТСЯ К ТЕКУЩЕЙ ДАТЕ, А НАДО К ТОЙ,КОТОРАЯ В БД
+        until = datetime.now() + timedelta(days=interval_in_days)
+        self.cur.execute("UPDATE users SET subscription = ? WHERE userid = ?",
+                         (until, user_id))
+        self.db.commit()
 
     def get_Z(self):
         return float(self.cur.execute("""SELECT value FROM settings WHERE name = "Z_deviation";""").fetchone()[0])
@@ -71,6 +96,13 @@ class UsersDataBase:
     def update_subscription_text(self, text):
         self.cur.execute(f'UPDATE settings SET value = "{text}" WHERE name = "subscription_text";')
         self.db.commit()
+
+
+    def add_payment(self, payment_id, from_id, first_name, username, language_code, currency, total_amount):
+        self.cur.execute("""INSERT INTO payments(paymentId, fromId, firstName, username, languadeCode, currency, totalAmount) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?)""", (payment_id, from_id, first_name,username, language_code, currency, total_amount))
+        self.db.commit()
+
 
 
 
