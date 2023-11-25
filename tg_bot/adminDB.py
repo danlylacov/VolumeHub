@@ -53,10 +53,22 @@ class UsersDataBase:
 
     def give_subscription_to_user(self, interval_in_days: int, user_id: int):
         # ИСПРАВИТЬ: СЕЙЧАС ПОДПИСКА ПРИБАВЛЯЕТСЯ К ТЕКУЩЕЙ ДАТЕ, А НАДО К ТОЙ,КОТОРАЯ В БД
-        until = datetime.now() + timedelta(days=interval_in_days)
-        self.cur.execute("UPDATE users SET subscription = ? WHERE userid = ?",
-                         (until, user_id))
-        self.db.commit()
+
+        subscription = str(self.cur.execute(f"""SELECT subscription FROM users WHERE userid = {user_id}""").fetchone()[0])
+
+        if subscription == "-":
+            until = datetime.now() + timedelta(days=interval_in_days)
+            self.cur.execute("UPDATE users SET subscription = ? WHERE userid = ?",
+                             (until, user_id))
+            self.db.commit()
+        else:
+            time_format = "%Y-%m-%d %H:%M:%S.%f"
+            formatted_time = datetime.strptime(subscription, time_format)
+            until = formatted_time + timedelta(days=interval_in_days)
+            self.cur.execute("UPDATE users SET subscription = ? WHERE userid = ?",
+                             (until, user_id))
+            self.db.commit()
+
 
     def get_Z(self):
         return float(self.cur.execute("""SELECT value FROM settings WHERE name = "Z_deviation";""").fetchone()[0])
