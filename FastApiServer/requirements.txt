@@ -1,0 +1,8 @@
+Fastapi
+uvicorn
+python-dotenv
+datetime
+tinkoff-investments
+apscheduler
+schedule
+
